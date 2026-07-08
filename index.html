@@ -172,7 +172,7 @@
 
 <script>
 
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSKPMccF7CvXHNlXSkeQwbEeMbRg0irCLUj9axJheS0OAS_jupsvVsbNCs8gqiC44ltok8gzB0fFTxu/pub?gid=1903997882&single=true&output=csv";
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtm6nnGbtVLBjVjGK8kbT-jlfznB8KQi5kv_tlycasejrXMncdhotqmxcOJLP06HYfANgyiTsWBrQ3/pub?gid=1903997882&single=true&output=csv";
 
 const input = document.getElementById("searchInput");
 const statusDiv = document.getElementById("status");
@@ -186,7 +186,7 @@ loadData();
 async function loadData() {
   try {
     if (!SHEET_CSV_URL || SHEET_CSV_URL.includes("여기에_")) {
-      statusDiv.textContent = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSKPMccF7CvXHNlXSkeQwbEeMbRg0irCLUj9axJheS0OAS_jupsvVsbNCs8gqiC44ltok8gzB0fFTxu/pub?gid=1903997882&single=true&output=csv";
+      statusDiv.textContent = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtm6nnGbtVLBjVjGK8kbT-jlfznB8KQi5kv_tlycasejrXMncdhotqmxcOJLP06HYfANgyiTsWBrQ3/pub?gid=1903997882&single=true&output=csv";
       return;
     }
 
