@@ -3,143 +3,280 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Choate Library</title>
+  <title>Choate English Library</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 
   <style>
+    :root {
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --text: #1a1d23;
+      --muted: #6b7280;
+      --line: #e6e8ec;
+      --primary: #2f6fed;
+      --primary-soft: #eef3fe;
+      --everand: #1e1e1e;
+      --storytel: #ff5c28;
+      --storytel-soft: #fff1ec;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6fb;
-      color: #222;
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
     }
 
     .container {
-      max-width: 760px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 40px 18px;
+      padding: 48px 20px 64px;
     }
 
+    /* ---------- 헤더 ---------- */
     .header {
-      text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .header h1 {
-      font-size: 38px;
-      margin: 0 0 10px;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0 0 6px;
     }
 
     .header p {
-      color: #666;
       margin: 0;
-      font-size: 16px;
+      color: var(--muted);
+      font-size: 15px;
     }
 
-    .search-box {
-      background: white;
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      margin-bottom: 22px;
+    /* ---------- 검색 ---------- */
+    .search-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      padding: 12px 0 14px;
     }
 
-    input {
+    .search {
+      position: relative;
+    }
+
+    .search svg {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .search input {
       width: 100%;
-      font-size: 22px;
-      padding: 16px 18px;
-      border: 2px solid #d0d7e2;
-      border-radius: 14px;
-      box-sizing: border-box;
+      font: inherit;
+      font-size: 17px;
+      padding: 16px 48px 16px 50px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
       outline: none;
-      transition: border-color .2s, box-shadow .2s;
+      transition: border-color .15s, box-shadow .15s;
     }
 
-    input:focus {
-      border-color: #1a73e8;
-      box-shadow: 0 0 0 4px rgba(26,115,232,.15);
+    .search input::placeholder { color: #a0a6b1; }
+
+    .search input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(47,111,237,.12);
     }
 
-    .status {
-      text-align: center;
-      color: #777;
-      margin: 16px 0;
-      min-height: 24px;
+    .clear-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 50%;
+      background: #eceef1;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
     }
 
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,.07);
+    .clear-btn.show { display: block; }
+
+    /* ---------- 필터 ---------- */
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
       cursor: pointer;
       transition: .15s;
+    }
+
+    .chip:hover { border-color: #c9ced6; }
+
+    .chip.active {
+      background: var(--text);
+      border-color: var(--text);
+      color: #fff;
+    }
+
+    /* ---------- 상태 ---------- */
+    .status {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 6px 2px 12px;
+      min-height: 20px;
+    }
+
+    /* ---------- 결과 목록 ---------- */
+    .list {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .list:empty { display: none; }
+
+    .row {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      transition: background .12s;
     }
 
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 22px rgba(0,0,0,.12);
+    .row:last-child { border-bottom: none; }
+
+    .row.clickable { cursor: pointer; }
+    .row.clickable:hover { background: #fafbfc; }
+
+    .row:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: -2px;
     }
 
-    .card:focus {
-      outline: 3px solid #1a73e8;
-      outline-offset: 3px;
+    .info {
+      flex: 1;
+      min-width: 0;
     }
 
     .series {
-      color: #1a73e8;
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .title {
-      font-size: 22px;
-      font-weight: bold;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+      word-break: keep-all;
     }
 
-    .open {
-      align-self: flex-start;
-      display: inline-block;
-      background: #1a73e8;
-      color: white;
-      text-decoration: none;
-      padding: 10px 14px;
+    /* ---------- 버튼 ---------- */
+    .btn {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 9px 14px;
       border-radius: 10px;
-      font-weight: bold;
-      transition: background .2s;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background .15s;
     }
 
-    .open:hover {
-      background: #1558b0;
+    .btn img {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: #fff;
     }
 
+    .btn.audio {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+    .btn.audio:hover { background: #e1eafd; }
+
+    .btn.everand {
+      background: var(--everand);
+      color: #fff;
+    }
+    .btn.everand:hover { background: #000; }
+
+    .btn.storytel {
+      background: var(--storytel-soft);
+      color: var(--storytel);
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* ---------- 빈 화면 ---------- */
     .empty {
       text-align: center;
-      background: white;
-      padding: 30px;
-      border-radius: 16px;
-      color: #777;
+      padding: 48px 20px;
+      color: var(--muted);
+      font-size: 15px;
+      background: var(--surface);
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
     }
 
-    @media (max-width:600px) {
-      .container {
-        padding: 20px 14px;
+    .empty .big {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    /* ---------- 모바일 ---------- */
+    @media (max-width: 560px) {
+      .container { padding: 28px 16px 48px; }
+      .header h1 { font-size: 24px; }
+      .search input { font-size: 16px; padding: 14px 44px 14px 46px; }
+      .search svg { left: 15px; }
+
+      .row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 16px;
       }
 
-      .header h1 {
-        font-size: 30px;
-      }
-
-      input {
-        font-size: 18px;
-      }
-
-      .title {
-        font-size: 19px;
-      }
+      .title { font-size: 16px; }
     }
   </style>
 </head>
@@ -148,25 +285,38 @@
 
 <div class="container">
 
-  <div class="header">
+  <header class="header">
     <h1>📚 Choate English Library</h1>
-    <p>책 제목 또는 시리즈명을 검색하세요</p>
+    <p>책 제목이나 시리즈명으로 음원을 찾아보세요</p>
+  </header>
+
+  <div class="search-wrap">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="20" y1="20" x2="16.5" y2="16.5"></line>
+      </svg>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="예: Big Nate, Bear Grylls"
+        autocomplete="off"
+        autofocus>
+      <button id="clearBtn" class="clear-btn" aria-label="검색어 지우기">×</button>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="chip active" data-filter="all">전체</button>
+      <button class="chip" data-filter="audio">🎧 음원</button>
+      <button class="chip" data-filter="everand">Everand</button>
+      <button class="chip" data-filter="storytel">Storytel</button>
+    </div>
   </div>
 
-  <div class="search-box">
-    <input
-      id="searchInput"
-      type="text"
-      placeholder="예 : Big Nate, Bear Grylls..."
-      autocomplete="off"
-      autofocus>
-  </div>
+  <div id="status" class="status">데이터 불러오는 중...</div>
 
-  <div id="status" class="status">
-    데이터 불러오는 중...
-  </div>
-
-  <div id="results"></div>
+  <div id="results" class="list"></div>
+  <div id="emptyBox"></div>
 
 </div>
 
@@ -174,124 +324,192 @@
 
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtm6nnGbtVLBjVjGK8kbT-jlfznB8KQi5kv_tlycasejrXMncdhotqmxcOJLP06HYfANgyiTsWBrQ3/pub?gid=1903997882&single=true&output=csv";
 
+const EVERAND_HOME = "https://www.everand.com/home";
+
+const ICONS = {
+  storytel: "https://www.google.com/s2/favicons?domain=storytel.com&sz=64",
+  everand:  "https://www.google.com/s2/favicons?domain=everand.com&sz=64"
+};
+
 const input = document.getElementById("searchInput");
+const clearBtn = document.getElementById("clearBtn");
 const statusDiv = document.getElementById("status");
 const resultsDiv = document.getElementById("results");
+const emptyBox = document.getElementById("emptyBox");
+const filtersDiv = document.getElementById("filters");
 
 let books = [];
 let timer = null;
+let currentFilter = "all";
 
 loadData();
 
 async function loadData() {
   try {
-    if (!SHEET_CSV_URL || SHEET_CSV_URL.includes("여기에_")) {
-      statusDiv.textContent = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtm6nnGbtVLBjVjGK8kbT-jlfznB8KQi5kv_tlycasejrXMncdhotqmxcOJLP06HYfANgyiTsWBrQ3/pub?gid=1903997882&single=true&output=csv";
-      return;
-    }
-
     const response = await fetch(SHEET_CSV_URL);
-
-    if (!response.ok) {
-      throw new Error("CSV를 불러오지 못했습니다.");
-    }
+    if (!response.ok) throw new Error("CSV를 불러오지 못했습니다.");
 
     const csv = await response.text();
     const rows = parseCSV(csv);
 
     books = rows
       .slice(1)
-      .map(row => ({
-        series: String(row[0] || "").trim(),
-        title: String(row[1] || "").trim(),
-        link: String(row[2] || "").trim()
-      }))
+      .map(row => {
+        const link = String(row[2] || "").trim();
+        return {
+          series: String(row[0] || "").trim(),
+          title: String(row[1] || "").trim(),
+          link: link,
+          source: detectSource(link)
+        };
+      })
       .filter(book => book.title && book.link);
 
-    statusDiv.textContent = "검색어를 입력하세요.";
+    statusDiv.textContent = "총 " + books.length + "권 · 검색어를 입력하세요";
   } catch (error) {
     console.error(error);
     statusDiv.textContent = "데이터를 불러오는 중 오류가 발생했습니다.";
   }
 }
 
+/*
+  C열(링크) 내용으로 구분
+  - "Storytel" 이라고 적혀 있으면 → Storytel (클릭 안 됨)
+  - "Everand" 라고 적혀 있으면   → Everand (클릭 시 everand 열림)
+  - 그 외 일반 링크              → 엑셀 음원 링크
+*/
+function detectSource(link) {
+  const t = link.toLowerCase();
+  if (t.includes("storytel")) return "storytel";
+  if (t.includes("everand")) return "everand";
+  return "audio";
+}
+
+/* ---------- 이벤트 ---------- */
+
 input.addEventListener("input", () => {
+  clearBtn.classList.toggle("show", input.value.length > 0);
   clearTimeout(timer);
-  timer = setTimeout(search, 300);
+  timer = setTimeout(search, 250);
 });
 
 input.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    search();
-  }
+  if (e.key === "Enter") search();
 });
+
+clearBtn.addEventListener("click", () => {
+  input.value = "";
+  clearBtn.classList.remove("show");
+  input.focus();
+  search();
+});
+
+filtersDiv.addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+
+  filtersDiv.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  currentFilter = chip.dataset.filter;
+  search();
+});
+
+/* ---------- 검색 ---------- */
 
 function search() {
   const keyword = normalizeText(input.value);
 
   resultsDiv.innerHTML = "";
-
-  if (!keyword) {
-    statusDiv.textContent = "검색어를 입력하세요.";
-    return;
-  }
+  emptyBox.innerHTML = "";
 
   if (books.length === 0) {
     statusDiv.textContent = "아직 데이터가 없습니다.";
     return;
   }
 
+  // 검색어 없고 필터도 '전체'면 안내만
+  if (!keyword && currentFilter === "all") {
+    statusDiv.textContent = "총 " + books.length + "권 · 검색어를 입력하세요";
+    return;
+  }
+
   const results = books
-    .filter(book => normalizeText(book.series + " " + book.title).includes(keyword))
+    .filter(book => currentFilter === "all" || book.source === currentFilter)
+    .filter(book => !keyword || normalizeText(book.series + " " + book.title).includes(keyword))
     .slice(0, 50);
 
   showResults(results);
 }
 
-function showResults(results) {
-  resultsDiv.innerHTML = "";
+function getOpenUrl(book) {
+  if (book.source === "everand") return isSafeUrl(book.link) ? book.link : EVERAND_HOME;
+  if (book.source === "audio") return isSafeUrl(book.link) ? book.link : null;
+  return null; // storytel : 열지 않음
+}
 
+function buttonHtml(book, url) {
+  if (book.source === "storytel") {
+    return `
+      <span class="btn storytel" aria-disabled="true">
+        <img src="${ICONS.storytel}" alt="">Storytel
+      </span>`;
+  }
+
+  if (book.source === "everand") {
+    return `
+      <a class="btn everand" href="${escapeAttr(url)}" target="_blank"
+         rel="noopener noreferrer" onclick="event.stopPropagation()">
+        <img src="${ICONS.everand}" alt="">Everand
+      </a>`;
+  }
+
+  if (!url) return "";
+
+  return `
+    <a class="btn audio" href="${escapeAttr(url)}" target="_blank"
+       rel="noopener noreferrer" onclick="event.stopPropagation()">
+      🎧 음원 듣기
+    </a>`;
+}
+
+function showResults(results) {
   if (results.length === 0) {
     statusDiv.textContent = "";
-    resultsDiv.innerHTML = "<div class='empty'>검색 결과가 없습니다.</div>";
+    emptyBox.innerHTML = `
+      <div class="empty">
+        <div class="big">🔍</div>
+        검색 결과가 없습니다.<br>다른 검색어로 찾아보세요.
+      </div>`;
     return;
   }
 
-  statusDiv.textContent = results.length + "권 검색됨";
+  statusDiv.textContent = results.length + "권 검색됨" + (results.length === 50 ? " (최대 50권 표시)" : "");
 
   results.forEach(book => {
-    const card = document.createElement("div");
+    const url = getOpenUrl(book);
+    const row = document.createElement("div");
 
-    card.className = "card";
-    card.tabIndex = 0;
+    row.className = "row" + (url ? " clickable" : "");
 
-    card.innerHTML = `
-      <div class="series">${escapeHtml(book.series)}</div>
-      <div class="title">${escapeHtml(book.title)}</div>
-      <a class="open"
-         href="${escapeAttr(book.link)}"
-         target="_blank"
-         rel="noopener noreferrer"
-         onclick="event.stopPropagation()">
-         🎧 음원 링크 열기
-      </a>
+    row.innerHTML = `
+      <div class="info">
+        ${book.series ? `<div class="series">${escapeHtml(book.series)}</div>` : ""}
+        <div class="title">${escapeHtml(book.title)}</div>
+      </div>
+      ${buttonHtml(book, url)}
     `;
 
-    card.addEventListener("click", () => {
-      if (isSafeUrl(book.link)) {
-        window.open(book.link, "_blank", "noopener,noreferrer");
-      }
-    });
+    if (url) {
+      row.tabIndex = 0;
+      row.addEventListener("click", () => window.open(url, "_blank", "noopener,noreferrer"));
+      row.addEventListener("keydown", e => { if (e.key === "Enter") row.click(); });
+    }
 
-    card.addEventListener("keydown", e => {
-      if (e.key === "Enter") {
-        card.click();
-      }
-    });
-
-    resultsDiv.appendChild(card);
+    resultsDiv.appendChild(row);
   });
 }
+
+/* ---------- 유틸 ---------- */
 
 function parseCSV(csv) {
   const rows = [];
@@ -312,10 +530,7 @@ function parseCSV(csv) {
       row.push(cell);
       cell = "";
     } else if ((char === "\n" || char === "\r") && !insideQuote) {
-      if (char === "\r" && next === "\n") {
-        i++;
-      }
-
+      if (char === "\r" && next === "\n") i++;
       if (cell || row.length) {
         row.push(cell);
         rows.push(row);
@@ -336,10 +551,7 @@ function parseCSV(csv) {
 }
 
 function normalizeText(text) {
-  return String(text || "")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, " ");
+  return String(text || "").toLowerCase().trim().replace(/\s+/g, " ");
 }
 
 function isSafeUrl(url) {
