@@ -251,6 +251,20 @@
     }
     .btn.everand:hover { background: #e8eaee; }
 
+    .btn.youtube {
+  background: #fff0f0;
+  color: #cc0000;
+  border: 1px solid #ffd0d0;
+}
+.btn.youtube:hover { background: #ffe0e0; }
+
+.btn.link {
+  background: #f3f4f6;
+  color: #2b2d31;
+  border: 1px solid #dcdfe4;
+}
+.btn.link:hover { background: #e8eaee; }
+
     .btn.off {
       background: var(--off-bg);
       color: var(--off-text);
@@ -313,12 +327,13 @@
     </div>
 
     <div class="filters" id="filters">
-      <button class="chip active" data-filter="all">전체</button>
-      <button class="chip" data-filter="soundcloud">SoundCloud</button>
-      <button class="chip" data-filter="everand">Everand</button>
-      <button class="chip" data-filter="storytel">Storytel</button>
-      <button class="chip" data-filter="audible">Audible</button>
-    </div>
+  <button class="chip active" data-filter="all">전체</button>
+  <button class="chip" data-filter="soundcloud">SoundCloud</button>
+  <button class="chip" data-filter="youtube">YouTube</button>   <!-- ← 이 줄 추가 -->
+  <button class="chip" data-filter="everand">Everand</button>
+  <button class="chip" data-filter="storytel">Storytel</button>
+  <button class="chip" data-filter="audible">Audible</button>
+</div>
   </div>
 
   <div id="status" class="status">데이터 불러오는 중...</div>
@@ -342,9 +357,11 @@ const EVERAND_HOME = "https://www.everand.com/home";
 
 const SOURCES = {
   soundcloud: { label: "SoundCloud", icon: "https://www.google.com/s2/favicons?domain=soundcloud.com&sz=64", clickable: true },
+  youtube:    { label: "YouTube",    icon: "https://www.google.com/s2/favicons?domain=youtube.com&sz=64",    clickable: true },
   everand:    { label: "Everand",    icon: "https://www.google.com/s2/favicons?domain=everand.com&sz=64",    clickable: true },
   storytel:   { label: "Storytel",   icon: "https://www.google.com/s2/favicons?domain=storytel.com&sz=64",   clickable: false },
-  audible:    { label: "Audible",    icon: "https://www.google.com/s2/favicons?domain=audible.com&sz=64",    clickable: false }
+  audible:    { label: "Audible",    icon: "https://www.google.com/s2/favicons?domain=audible.com&sz=64",    clickable: false },
+  link:       { label: "Link",       icon: "https://www.google.com/s2/favicons?domain=google.com&sz=64",     clickable: true }
 };
 
 const input = document.getElementById("searchInput");
@@ -395,10 +412,12 @@ async function loadData() {
 
 function detectSource(link) {
   const t = link.toLowerCase();
+  if (t.includes("youtube.com") || t.includes("youtu.be")) return "youtube";
+  if (t.includes("soundcloud.com") || t.includes("snd.sc")) return "soundcloud";
+  if (t.includes("everand")) return "everand";
   if (t.includes("storytel")) return "storytel";
   if (t.includes("audible")) return "audible";
-  if (t.includes("everand")) return "everand";
-  return "soundcloud";
+  return "link"; // 모르는 사이트
 }
 
 input.addEventListener("input", () => {
@@ -452,9 +471,10 @@ function search() {
 }
 
 function getOpenUrl(link) {
-  if (link.source === "everand") return isSafeUrl(link.url) ? link.url : EVERAND_HOME;
-  if (link.source === "soundcloud") return isSafeUrl(link.url) ? link.url : null;
-  return null;
+  const s = SOURCES[link.source];
+  if (!s || !s.clickable) return null;
+  if (isSafeUrl(link.url)) return link.url;
+  return link.source === "everand" ? EVERAND_HOME : null;
 }
 
 function buttonHtml(link) {
